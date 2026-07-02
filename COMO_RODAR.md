@@ -102,7 +102,7 @@ docker compose down -v
 | Senha    | pes_password  |
 | Root     | root / root_password |
 
-> ⚠️ Essas credenciais são apenas para desenvolvimento local.
+> Essas credenciais são apenas para desenvolvimento local.
 > Não usar em produção.
 
 ## Estrutura de pastas
