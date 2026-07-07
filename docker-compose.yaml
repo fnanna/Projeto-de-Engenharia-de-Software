@@ -36,25 +36,24 @@ services:
       timeout: 5s
       retries: 5
 
-  # BACKEND (a definir)
-
-  # backend:
-  #   build: ./backend
-  #   container_name: pes_backend
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     DB_HOST: db
-  #     DB_PORT: 3306
-  #     DB_NAME: pes_db
-  #     DB_USER: pes_user
-  #     DB_PASSWORD: pes_password
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
-  #   networks:
-  #     - pes_network
+  # BACKEND (Python)
+  backend:
+    build: ./backend
+    container_name: pes_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: pes_db
+      DB_USER: pes_user
+      DB_PASSWORD: pes_password
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - pes_network
 
 volumes:
   db_data:
