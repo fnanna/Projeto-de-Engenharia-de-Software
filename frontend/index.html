@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TRAÇO — Sistema interno do escritório</title>
+<title>AZPT — Sistema interno</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,9 +16,9 @@
   <div class="login-box">
     <div class="brand"><span class="brand-mark">✳</span><span class="brand-word">AZPT</span></div>
     <p class="login-sub">Sistema interno de gestão</p>
-    <div class="field"><label for="li-email">E-mail</label><input id="li-email" type="email" value="andre@estudio.com.br"></div>
+    <div class="field"><label for="li-email">E-mail</label><input id="li-email" type="email" value="enzo@gmail.com.br"></div>
     <div class="field"><label for="li-pass">Senha</label><input id="li-pass" type="password" value="••••••••"></div>
-    <button class="btn btn-primary" onclick="doLogin()">Entrar</button>
+    <button class="btn btn-primary btn-block" onclick="doLogin()">Entrar</button>
   </div>
 </div>
 
@@ -36,10 +36,10 @@
       <div class="nav-label">Análise</div>
       <button class="nav-item" data-page="horas" onclick="nav('horas')"><span class="ic">◷</span><span class="txt">Horas</span></button>
     </nav>
-    <div class="nav-group" style="flex:none;padding-top:0;">
+    <div class="nav-group nav-group-bottom">
       <button class="nav-item" data-page="perfil" onclick="nav('perfil')"><span class="ic">◌</span><span class="txt">Perfil</span></button>
     </div>
-    <div class="sidebar-foot">v0.2 · protótipo</div>
+    <div class="sidebar-foot">v0.3 · protótipo</div>
   </aside>
 
   <div class="main-col">
@@ -48,7 +48,7 @@
       <div class="topbar-right">
         <button class="icon-btn" title="Tarefa recente" onclick="openLastTask()">◷<span class="dot-badge" id="timerDot" style="display:none;"></span></button>
         <button class="icon-btn" title="Notificações">🔔<span class="dot-badge"></span></button>
-        <div class="avatar">AN</div>
+        <div class="avatar" id="topbar-avatar">EN</div>
       </div>
     </header>
 
@@ -58,80 +58,33 @@
       <section class="page" data-page="dashboard">
         <div class="page-head">
           <div>
-            <div class="eyebrow">Segunda-feira, 3 de agosto</div>
-            <h1>Bom dia, Usuário</h1>
+            <div class="eyebrow" id="dash-date">—</div>
+            <h1 id="dash-greeting">Bom dia</h1>
           </div>
-          <div class="mini-stat">◷ <b>32h e 30min</b> registradas essa semana · uso interno</div>
+          <div class="mini-stat" id="dash-hours">—</div>
         </div>
 
-        <div class="stat-grid">
-          <div class="card stat-card">
-            <span class="eyebrow">Projetos ativos</span>
-            <div class="stat-num">05</div>
-            <span class="stat-trend">+1 esse mês</span>
-          </div>
-          <div class="card stat-card">
-            <span class="eyebrow">Tarefas pendentes</span>
-            <div class="stat-num">07</div>
-            <span class="stat-trend alert">2 vencem essa semana</span>
-          </div>
-          <div class="card stat-card">
-            <span class="eyebrow">Reuniões marcadas</span>
-            <div class="stat-num">03</div>
-            <span class="stat-trend">próxima em 2 dias</span>
-          </div>
-        </div>
+        <div class="stat-grid" id="dash-stats"></div>
 
         <div class="two-col">
           <div class="card">
             <div class="panel-title">Lembretes</div>
-            <div class="reminder-row"><span class="reminder-date">HOJE</span><div><div class="reminder-txt">Entrega do estudo preliminar — Vale Verde</div><div class="reminder-sub">Cliente: Fam. Andrade</div></div></div>
-            <div class="reminder-row"><span class="reminder-date">QUA</span><div><div class="reminder-txt">Reunião de obra — Loja Cedro</div><div class="reminder-sub">10h · com fornecedor de marcenaria</div></div></div>
-            <div class="reminder-row"><span class="reminder-date">SEX</span><div><div class="reminder-txt">Prazo executivo — Ed. Jequitibá</div><div class="reminder-sub">Fase: Projeto executivo</div></div></div>
+            <button class="btn btn-outline btn-sm" onclick="addReminder()">+ Lembrete</button>
+            <div id="dash-reminders"></div>
           </div>
           <div class="card">
             <div class="panel-title">Atividade recente</div>
-            <div class="timeline">
-              <div class="tl-item"><div class="tl-time">09:40</div><div class="tl-txt"><b>Mapu</b> moveu "Detalhamento do banheiro" para Revisão — Vale Verde</div></div>
-              <div class="tl-item"><div class="tl-time">09:12</div><div class="tl-txt"><b>Enzo</b> registrou 3h no cronômetro — fase Executivo, Loja Cedro</div></div>
-              <div class="tl-item"><div class="tl-time">Ontem</div><div class="tl-txt"><b>Mapu</b> adicionou ata da reunião com Fam. Andrade</div></div>
-              <div class="tl-item"><div class="tl-time">Ontem</div><div class="tl-txt"><b>André</b> atualizou o cronograma — Ed. Jequitibá</div></div>
-            </div>
+            <div class="timeline" id="dash-activity"></div>
           </div>
         </div>
 
         <div class="section-title"><h2>Projetos em destaque</h2><a href="#" class="eyebrow" onclick="nav('projetos');return false;">Ver todos →</a></div>
-        <div class="proj-row-grid">
-          <div class="card thumb-card" style="padding:0;" onclick="nav('projeto')">
-            <div class="thumb-photo" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&h=300&fit=crop')"></div>
-            <div class="thumb-body">
-              <div class="thumb-name-row"><span class="glyph">✳</span><h3>Residência Vale Verde</h3></div>
-              <div class="thumb-tags"><span class="badge andamento">Tudo ok</span><span class="badge naoiniciado">Projeto executivo</span></div>
-              <div class="thumb-foot"><span class="eyebrow">Fam. Andrade</span><div class="mini-avatars"><div class="mini-avatar">AN</div><div class="mini-avatar">MP</div></div></div>
-            </div>
-          </div>
-          <div class="card thumb-card" style="padding:0;" onclick="nav('projeto')">
-            <div class="thumb-photo" style="background-image:url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=300&fit=crop')"></div>
-            <div class="thumb-body">
-              <div class="thumb-name-row"><span class="glyph">◎</span><h3>Loja Cedro</h3></div>
-              <div class="thumb-tags"><span class="badge revisao">Em revisão</span><span class="badge naoiniciado">Ant. interiores</span></div>
-              <div class="thumb-foot"><span class="eyebrow">Cedro Móveis</span><div class="mini-avatars"><div class="mini-avatar">MP</div></div></div>
-            </div>
-          </div>
-          <div class="card thumb-card" style="padding:0;" onclick="nav('projeto')">
-            <div class="thumb-photo no-photo">▲</div>
-            <div class="thumb-body">
-              <div class="thumb-name-row"><span class="glyph">▲</span><h3>Ed. Jequitibá — cobertura</h3></div>
-              <div class="thumb-tags"><span class="badge atraso">Atrasado</span><span class="badge naoiniciado">Anteprojeto</span></div>
-              <div class="thumb-foot"><span class="eyebrow">Sr. Camargo</span><div class="mini-avatars"><div class="mini-avatar">AN</div></div></div>
-            </div>
-          </div>
-        </div>
+        <div class="proj-row-grid" id="dash-featured"></div>
       </section>
 
       <!-- ============ PROJETOS (HUB) ============ -->
       <section class="page" data-page="projetos">
-        <div class="page-head"><div><div class="eyebrow">Gestão de projetos</div><h1>Projetos</h1></div><button class="btn btn-primary" style="width:auto;">+ Novo projeto</button></div>
+        <div class="page-head"><div><div class="eyebrow">Gestão de projetos</div><h1>Projetos</h1></div><button class="btn btn-primary">+ Novo projeto</button></div>
 
         <div class="hub-tabs">
           <button class="hub-tab is-active" data-hub="hub-projetos" onclick="hubTab('hub-projetos')">Projetos</button>
@@ -143,85 +96,17 @@
         <!-- HUB: PROJETOS (thumbnails) -->
         <div class="hub-panel is-active" data-hubpanel="hub-projetos">
           <div class="hub-toolbar"><input class="search-input" placeholder="Buscar projeto ou cliente…"></div>
-          <div class="thumb-grid">
-            <div class="thumb-card" onclick="nav('projeto')">
-              <div class="thumb-photo" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&h=300&fit=crop')"></div>
-              <div class="thumb-body">
-                <div class="thumb-name-row"><span class="glyph">✳</span><h3>Residência Vale Verde</h3></div>
-                <div class="thumb-tags"><span class="badge andamento">Tudo ok</span><span class="badge naoiniciado">Projeto executivo</span></div>
-                <div class="thumb-foot"><span class="eyebrow">Fam. Andrade</span><div class="mini-avatars"><div class="mini-avatar">AN</div><div class="mini-avatar">MP</div></div></div>
-              </div>
-            </div>
-            <div class="thumb-card" onclick="nav('projeto')">
-              <div class="thumb-photo" style="background-image:url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=300&fit=crop')"></div>
-              <div class="thumb-body">
-                <div class="thumb-name-row"><span class="glyph">◎</span><h3>Loja Cedro</h3></div>
-                <div class="thumb-tags"><span class="badge revisao">Em revisão</span><span class="badge naoiniciado">Ant. interiores</span></div>
-                <div class="thumb-foot"><span class="eyebrow">Cedro Móveis Ltda.</span><div class="mini-avatars"><div class="mini-avatar">MP</div></div></div>
-              </div>
-            </div>
-            <div class="thumb-card" onclick="nav('projeto')">
-              <div class="thumb-photo no-photo">▲</div>
-              <div class="thumb-body">
-                <div class="thumb-name-row"><span class="glyph">▲</span><h3>Ed. Jequitibá — cobertura</h3></div>
-                <div class="thumb-tags"><span class="badge atraso">Atrasado</span><span class="badge naoiniciado">Anteprojeto</span></div>
-                <div class="thumb-foot"><span class="eyebrow">Sr. Camargo</span><div class="mini-avatars"><div class="mini-avatar">AN</div></div></div>
-              </div>
-            </div>
-            <div class="thumb-card" onclick="nav('projeto')">
-              <div class="thumb-photo" style="background-image:url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=300&fit=crop')"></div>
-              <div class="thumb-body">
-                <div class="thumb-name-row"><span class="glyph">✳</span><h3>Apartamento Bosque</h3></div>
-                <div class="thumb-tags"><span class="badge andamento">Tudo ok</span><span class="badge naoiniciado">Levantamento</span></div>
-                <div class="thumb-foot"><span class="eyebrow">Sra. Tavares</span><div class="mini-avatars"><div class="mini-avatar">MP</div></div></div>
-              </div>
-            </div>
-          </div>
+          <div class="thumb-grid" id="hub-thumb-grid"></div>
         </div>
 
         <!-- HUB: CRONOGRAMA GERAL -->
         <div class="hub-panel" data-hubpanel="hub-cronograma">
           <div class="cal-head">
-            <div><h2 style="font-size:16px;">Setembro 2026</h2></div>
+            <div><h2 class="cal-title" id="cal-month">—</h2></div>
             <div class="cal-nav"><button>‹</button><button>›</button></div>
           </div>
-          <div class="cal-grid">
+          <div class="cal-grid" id="cal-grid">
             <div class="cal-dow">Dom</div><div class="cal-dow">Seg</div><div class="cal-dow">Ter</div><div class="cal-dow">Qua</div><div class="cal-dow">Qui</div><div class="cal-dow">Sex</div><div class="cal-dow">Sáb</div>
-            <div class="cal-cell muted"><div class="cal-daynum">30</div></div>
-            <div class="cal-cell muted"><div class="cal-daynum">31</div></div>
-            <div class="cal-cell"><div class="cal-daynum">1</div><span class="cal-chip b">Vale Verde · reunião</span></div>
-            <div class="cal-cell"><div class="cal-daynum">2</div><span class="cal-chip a">Cedro · entrega revisão</span></div>
-            <div class="cal-cell"><div class="cal-daynum">3</div></div>
-            <div class="cal-cell"><div class="cal-daynum">4</div></div>
-            <div class="cal-cell"><div class="cal-daynum">5</div></div>
-            <div class="cal-cell"><div class="cal-daynum">6</div></div>
-            <div class="cal-cell"><div class="cal-daynum">7</div></div>
-            <div class="cal-cell"><div class="cal-daynum">8</div></div>
-            <div class="cal-cell"><div class="cal-daynum">9</div></div>
-            <div class="cal-cell"><div class="cal-daynum">10</div></div>
-            <div class="cal-cell"><div class="cal-daynum">11</div></div>
-            <div class="cal-cell"><div class="cal-daynum">12</div></div>
-            <div class="cal-cell"><div class="cal-daynum">13</div></div>
-            <div class="cal-cell"><div class="cal-daynum">14</div></div>
-            <div class="cal-cell"><div class="cal-daynum">15</div><span class="cal-chip b">Bosque · prazo levant.</span></div>
-            <div class="cal-cell"><div class="cal-daynum">16</div></div>
-            <div class="cal-cell"><div class="cal-daynum">17</div></div>
-            <div class="cal-cell"><div class="cal-daynum">18</div><span class="cal-chip s">Andrade · reunião</span></div>
-            <div class="cal-cell"><div class="cal-daynum">19</div></div>
-            <div class="cal-cell"><div class="cal-daynum">20</div></div>
-            <div class="cal-cell"><div class="cal-daynum">21</div><span class="cal-chip r">Jequitibá · atrasado</span></div>
-            <div class="cal-cell today"><div class="cal-daynum">22</div></div>
-            <div class="cal-cell"><div class="cal-daynum">23</div></div>
-            <div class="cal-cell"><div class="cal-daynum">24</div></div>
-            <div class="cal-cell"><div class="cal-daynum">25</div></div>
-            <div class="cal-cell"><div class="cal-daynum">26</div></div>
-            <div class="cal-cell"><div class="cal-daynum">27</div></div>
-            <div class="cal-cell"><div class="cal-daynum">28</div><span class="cal-chip b">Vale Verde · entrega executivo</span></div>
-            <div class="cal-cell"><div class="cal-daynum">29</div></div>
-            <div class="cal-cell"><div class="cal-daynum">30</div></div>
-            <div class="cal-cell muted"><div class="cal-daynum">1</div></div>
-            <div class="cal-cell muted"><div class="cal-daynum">2</div></div>
-            <div class="cal-cell muted"><div class="cal-daynum">3</div></div>
           </div>
         </div>
 
@@ -232,26 +117,8 @@
 
         <!-- HUB: CONCLUÍDOS -->
         <div class="hub-panel" data-hubpanel="hub-concluidos">
-          <div class="list">
+          <div class="list" id="lista-concluidos">
             <div class="list-row list-head"><span></span><span>Projeto</span><span>Cliente</span><span>Categoria</span><span>Concluído em</span><span>Horas totais</span><span></span></div>
-            <div class="list-row">
-              <span class="cat-glyph">✦</span>
-              <span class="proj-name-cell"><b>Estande Feira Design SP</b><span>Instalação efêmera</span></span>
-              <span>Feira Design SP</span>
-              <span><span class="badge concluido">Efêmera</span></span>
-              <span class="mono-cell">10 jul</span>
-              <span class="mono-cell">40h e 0min</span>
-              <span></span>
-            </div>
-            <div class="list-row">
-              <span class="cat-glyph">✳</span>
-              <span class="proj-name-cell"><b>Reforma Sobrado Aurora</b><span>Residencial, 160m²</span></span>
-              <span>Fam. Ribeiro</span>
-              <span class="badge concluido">Residencial</span>
-              <span class="mono-cell">22 jun</span>
-              <span class="mono-cell">58h e 30min</span>
-              <span></span>
-            </div>
           </div>
         </div>
       </section>
@@ -259,40 +126,25 @@
       <!-- ============ PROJETO DETALHE ============ -->
       <section class="page" data-page="projeto">
         <div class="proj-hero">
-          <div class="proj-hero-photo" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&h=300&fit=crop')"></div>
+          <div class="proj-hero-photo" id="proj-hero-photo"></div>
           <div class="proj-hero-info">
             <div class="proj-title-row">
-              <span class="glyph">✳</span><h1>Residência Vale Verde</h1>
-              <select class="status-select andamento" onchange="onStatusChange(this)" title="Status do projeto">
+              <span class="glyph" id="proj-glyph">✳</span><h1 id="proj-title">—</h1>
+              <select class="status-select andamento" id="proj-status" onchange="onStatusChange(this)" title="Status do projeto">
+                <option value="semtag">Sem tag</option>
                 <option value="naoiniciado">Atrasado</option>
                 <option value="andamento" selected>Tudo ok</option>
                 <option value="revisao">Em revisão</option>
                 <option value="concluido">Concluído</option>
               </select>
             </div>
-            <div class="proj-hero-sub">Fam. Andrade · Rua das Palmeiras, 340</div>
-            <div class="hero-meta-row">
-              <div class="hero-meta-item"><div class="eyebrow">Etapa atual</div><div>Projeto executivo</div></div>
-              <div class="hero-meta-item"><div class="eyebrow">Entrega da etapa</div><div>28 ago 2026</div></div>
-              <div class="hero-meta-item">
-                <div class="eyebrow">Equipe</div>
-                <div class="team-chips">
-                  <div class="team-chip"><div class="mini-avatar">MY</div>Myllena</div>
-                  <div class="team-chip"><div class="mini-avatar">WE</div>Wesley</div>
-                  <button class="team-add" title="Adicionar à equipe" onclick="alert('Adicionar membro à equipe do projeto')">+</button>
-                </div>
-              </div>
-            </div>
+            <div class="proj-hero-sub" id="proj-sub">—</div>
+            <div class="hero-meta-row" id="proj-meta"></div>
             <button class="link-btn" onclick="openLastTask()">◷ Ver tarefas do projeto →</button>
           </div>
         </div>
 
-        <div class="kv-table">
-          <div class="kv-row"><div class="kv-label">Descrição</div><div class="kv-value">Casa térrea de 220m² com três suítes, área gourmet integrada e paisagismo assinado. Projeto iniciado em junho de 2026.</div></div>
-          <div class="kv-row"><div class="kv-label">Endereço</div><div class="kv-value">Rua das Palmeiras, 340 — Bairro Vale Verde</div></div>
-          <div class="kv-row"><div class="kv-label">Visitas ao local</div><div class="kv-value">4 visitas realizadas · próxima em 30 ago</div></div>
-          <div class="kv-row"><div class="kv-label">Arquivos</div><div class="kv-value"><a href="#" class="link-btn" style="display:inline-flex;">📁 Abrir pasta no Drive ↗</a></div></div>
-        </div>
+        <div class="kv-table" id="proj-kv"></div>
 
         <div class="tabs">
           <button class="tab-btn is-active" data-tab="tarefas" onclick="tab('tarefas')">Tarefas</button>
@@ -309,215 +161,42 @@
             <button class="status-tab" data-status="revisao" onclick="statusTab('revisao')">Em revisão</button>
             <button class="status-tab" data-status="concluidas" onclick="statusTab('concluidas')">Concluídas</button>
           </div>
-
-          <div class="status-panel is-active" data-statuspanel="andamento">
-            <div class="task-group-actions"><button class="link-btn" onclick="addTaskGroup('andamento')">+ Nova etapa</button></div>
-            <div class="task-group">
-              <div class="task-group-head" onclick="toggleGroup(this)"><span class="car">▾</span><b>Projeto executivo</b><span class="eyebrow" style="margin-left:auto;">5 tarefas</span><button class="group-add-btn" onclick="event.stopPropagation();addTaskRow('tbody-exec-and','Projeto executivo')">+ tarefa</button></div>
-              <div class="task-group-body">
-                <table class="task-table">
-                  <thead><tr><th>Responsável</th><th>Tarefa</th><th>Prazo</th><th>Status</th><th>Tempo</th></tr></thead>
-                  <tbody id="tbody-exec-and">
-                    <tr onclick="openTask('Cotas do telhado — planta de cobertura','Projeto executivo')">
-                      <td><div class="resp-cell"><div class="mini-avatar">MP</div>Mapu</div></td>
-                      <td><span class="disc">ARQ</span>Cotas do telhado — planta de cobertura</td>
-                      <td class="mono-cell">30 ago</td>
-                      <td><select class="status-select badge naoiniciado" onchange="onStatusChange(this)"><option value="naoiniciado" selected>Não iniciado</option><option value="andamento">Em andamento</option><option value="revisao">Em revisão</option><option value="concluido">Concluído</option></select></td>
-                      <td class="mono-cell">0h e 0min</td>
-                    </tr>
-                    <tr onclick="openTask('Especificação de esquadrias','Projeto executivo')">
-                      <td><div class="resp-cell"><div class="mini-avatar">AN</div>André</div></td>
-                      <td><span class="disc">ARQ</span>Especificação de esquadrias</td>
-                      <td class="mono-cell">30 ago</td>
-                      <td><select class="status-select badge naoiniciado" onchange="onStatusChange(this)"><option value="naoiniciado" selected>Não iniciado</option><option value="andamento">Em andamento</option><option value="revisao">Em revisão</option><option value="concluido">Concluído</option></select></td>
-                      <td class="mono-cell">0h e 0min</td>
-                    </tr>
-                    <tr onclick="openTask('Memorial descritivo — acabamentos','Projeto executivo')">
-                      <td><div class="resp-cell"><div class="mini-avatar">MP</div>Mapu</div></td>
-                      <td><span class="disc">ARQ</span>Memorial descritivo — acabamentos</td>
-                      <td class="mono-cell">30 ago</td>
-                      <td><select class="status-select badge naoiniciado" onchange="onStatusChange(this)"><option value="naoiniciado" selected>Não iniciado</option><option value="andamento">Em andamento</option><option value="revisao">Em revisão</option><option value="concluido">Concluído</option></select></td>
-                      <td class="mono-cell">0h e 0min</td>
-                    </tr>
-                    <tr onclick="openTask('Detalhamento do banheiro social','Projeto executivo')">
-                      <td><div class="resp-cell"><div class="mini-avatar">AN</div>André</div></td>
-                      <td><span class="disc">LIN</span>Detalhamento do banheiro social</td>
-                      <td class="mono-cell">28 ago</td>
-                      <td><select class="status-select badge andamento" onchange="onStatusChange(this)"><option value="naoiniciado">Não iniciado</option><option value="andamento" selected>Em andamento</option><option value="revisao">Em revisão</option><option value="concluido">Concluído</option></select></td>
-                      <td class="mono-cell">1h e 12min</td>
-                    </tr>
-                    <tr onclick="openTask('Compatibilização com projeto elétrico','Projeto executivo')">
-                      <td><div class="resp-cell"><div class="mini-avatar">MP</div>Mapu</div></td>
-                      <td><span class="disc">INS</span>Compatibilização com projeto elétrico</td>
-                      <td class="mono-cell">28 ago</td>
-                      <td><select class="status-select badge andamento" onchange="onStatusChange(this)"><option value="naoiniciado">Não iniciado</option><option value="andamento" selected>Em andamento</option><option value="revisao">Em revisão</option><option value="concluido">Concluído</option></select></td>
-                      <td class="mono-cell">4h e 0min</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div class="status-panel" data-statuspanel="revisao">
-            <div class="task-group-actions"><button class="link-btn" onclick="addTaskGroup('revisao')">+ Nova etapa</button></div>
-            <div class="task-group">
-              <div class="task-group-head" onclick="toggleGroup(this)"><span class="car">▾</span><b>Anteprojeto</b><span class="eyebrow" style="margin-left:auto;">1 tarefa</span><button class="group-add-btn" onclick="event.stopPropagation();addTaskRow('tbody-ante-rev','Anteprojeto')">+ tarefa</button></div>
-              <div class="task-group-body">
-                <table class="task-table">
-                  <thead><tr><th>Responsável</th><th>Tarefa</th><th>Prazo</th><th>Status</th><th>Tempo</th></tr></thead>
-                  <tbody id="tbody-ante-rev">
-                    <tr onclick="openTask('Planta baixa — pavimento superior','Anteprojeto')">
-                      <td><div class="resp-cell"><div class="mini-avatar">AN</div>André</div></td>
-                      <td><span class="disc">ARQ</span>Planta baixa — pavimento superior</td>
-                      <td class="mono-cell">—</td>
-                      <td><select class="status-select badge revisao" onchange="onStatusChange(this)"><option value="naoiniciado">Não iniciado</option><option value="andamento">Em andamento</option><option value="revisao" selected>Em revisão</option><option value="concluido">Concluído</option></select></td>
-                      <td class="mono-cell">6h e 30min</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div class="status-panel" data-statuspanel="concluidas">
-            <div class="task-group-actions"><button class="link-btn" onclick="addTaskGroup('concluidas')">+ Nova etapa</button></div>
-            <div class="task-group">
-              <div class="task-group-head" onclick="toggleGroup(this)"><span class="car">▾</span><b>Estudo preliminar</b><span class="eyebrow" style="margin-left:auto;">2 tarefas</span><button class="group-add-btn" onclick="event.stopPropagation();addTaskRow('tbody-estudo-conc','Estudo preliminar')">+ tarefa</button></div>
-              <div class="task-group-body">
-                <table class="task-table">
-                  <thead><tr><th>Responsável</th><th>Tarefa</th><th>Prazo</th><th>Status</th><th>Tempo</th></tr></thead>
-                  <tbody id="tbody-estudo-conc">
-                    <tr onclick="openTask('Estudo de viabilidade','Estudo preliminar')">
-                      <td><div class="resp-cell"><div class="mini-avatar">MP</div>Mapu</div></td>
-                      <td><span class="disc">ARQ</span>Estudo de viabilidade</td>
-                      <td class="mono-cell">—</td>
-                      <td><select class="status-select badge concluido" onchange="onStatusChange(this)"><option value="naoiniciado">Não iniciado</option><option value="andamento">Em andamento</option><option value="revisao">Em revisão</option><option value="concluido" selected>Concluído</option></select></td>
-                      <td class="mono-cell">8h e 0min</td>
-                    </tr>
-                    <tr onclick="openTask('Implantação e insolação','Estudo preliminar')">
-                      <td><div class="resp-cell"><div class="mini-avatar">AN</div>André</div></td>
-                      <td><span class="disc">ARQ</span>Implantação e insolação</td>
-                      <td class="mono-cell">—</td>
-                      <td><select class="status-select badge concluido" onchange="onStatusChange(this)"><option value="naoiniciado">Não iniciado</option><option value="andamento">Em andamento</option><option value="revisao">Em revisão</option><option value="concluido" selected>Concluído</option></select></td>
-                      <td class="mono-cell">5h e 30min</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="task-group">
-              <div class="task-group-head" onclick="toggleGroup(this)"><span class="car">▾</span><b>Anteprojeto</b><span class="eyebrow" style="margin-left:auto;">2 tarefas</span><button class="group-add-btn" onclick="event.stopPropagation();addTaskRow('tbody-ante-conc','Anteprojeto')">+ tarefa</button></div>
-              <div class="task-group-body">
-                <table class="task-table">
-                  <thead><tr><th>Responsável</th><th>Tarefa</th><th>Prazo</th><th>Status</th><th>Tempo</th></tr></thead>
-                  <tbody id="tbody-ante-conc">
-                    <tr onclick="openTask('Planta baixa — térreo','Anteprojeto')">
-                      <td><div class="resp-cell"><div class="mini-avatar">MP</div>Mapu</div></td>
-                      <td><span class="disc">ARQ</span>Planta baixa — térreo</td>
-                      <td class="mono-cell">—</td>
-                      <td><select class="status-select badge concluido" onchange="onStatusChange(this)"><option value="naoiniciado">Não iniciado</option><option value="andamento">Em andamento</option><option value="revisao">Em revisão</option><option value="concluido" selected>Concluído</option></select></td>
-                      <td class="mono-cell">7h e 0min</td>
-                    </tr>
-                    <tr onclick="openTask('Elevações e cortes','Anteprojeto')">
-                      <td><div class="resp-cell"><div class="mini-avatar">AN</div>André</div></td>
-                      <td><span class="disc">ARQ</span>Elevações e cortes</td>
-                      <td class="mono-cell">—</td>
-                      <td><select class="status-select badge concluido" onchange="onStatusChange(this)"><option value="naoiniciado">Não iniciado</option><option value="andamento">Em andamento</option><option value="revisao">Em revisão</option><option value="concluido" selected>Concluído</option></select></td>
-                      <td class="mono-cell">9h e 0min</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          <div class="status-panel is-active" data-statuspanel="andamento" id="tasks-andamento"></div>
+          <div class="status-panel" data-statuspanel="revisao" id="tasks-revisao"></div>
+          <div class="status-panel" data-statuspanel="concluidas" id="tasks-concluidas"></div>
         </div>
 
         <!-- CRONOGRAMA -->
         <div class="tab-panel" data-tabpanel="cronograma">
-          <div class="card">
-            <div class="phase-list">
-              <div class="phase-item done">
-                <div class="phase-dot">✓</div>
-                <div><div class="phase-name">Estudo preliminar</div><div class="phase-dates">05 jun — 20 jun</div></div>
-                <span class="badge concluido">Concluída</span>
-              </div>
-              <div class="phase-item done">
-                <div class="phase-dot">✓</div>
-                <div><div class="phase-name">Anteprojeto</div><div class="phase-dates">20 jun — 15 jul · marco: apresentação ao cliente</div></div>
-                <span class="badge concluido">Concluída</span>
-              </div>
-              <div class="phase-item current">
-                <div class="phase-dot">●</div>
-                <div><div class="phase-name">Projeto executivo</div><div class="phase-dates">15 jul — 28 ago</div></div>
-                <span class="badge andamento">Em andamento</span>
-              </div>
-              <div class="phase-item">
-                <div class="phase-dot"></div>
-                <div><div class="phase-name">Acompanhamento de obra</div><div class="phase-dates">a partir de set 2026</div></div>
-                <span class="badge naoiniciado">Não iniciada</span>
-              </div>
-            </div>
-          </div>
+          <div class="gantt-wrap" id="gantt-root"></div>
         </div>
 
         <!-- KANBAN -->
         <div class="tab-panel" data-tabpanel="kanban">
-          <div class="stage-kanban" style="overflow-x:visible;">
-            <div class="stage-col" style="width:100%;flex:1;">
-              <div class="stage-col-head"><span class="stg-name">A fazer</span><span class="stg-count">03</span></div>
-              <div class="stage-card" onclick="openTask('Cotas do telhado — planta de cobertura','Projeto executivo')"><div class="stage-card-name"><span class="glyph" style="font-size:10px;">ARQ</span> Cotas do telhado</div><div class="stage-card-foot"><span class="eyebrow">0h e 0min</span><div class="mini-avatar">MP</div></div></div>
-              <div class="stage-card" onclick="openTask('Especificação de esquadrias','Projeto executivo')"><div class="stage-card-name"><span class="glyph" style="font-size:10px;">ARQ</span> Especificação de esquadrias</div><div class="stage-card-foot"><span class="eyebrow">0h e 0min</span><div class="mini-avatar">AN</div></div></div>
-              <div class="stage-card" onclick="openTask('Memorial descritivo — acabamentos','Projeto executivo')"><div class="stage-card-name"><span class="glyph" style="font-size:10px;">ARQ</span> Memorial descritivo</div><div class="stage-card-foot"><span class="eyebrow">0h e 0min</span><div class="mini-avatar">MP</div></div></div>
-            </div>
-            <div class="stage-col" style="width:100%;flex:1;">
-              <div class="stage-col-head"><span class="stg-name">Em andamento</span><span class="stg-count">02</span></div>
-              <div class="stage-card" onclick="openTask('Detalhamento do banheiro social','Projeto executivo')"><div class="stage-card-name"><span class="glyph" style="font-size:10px;">LIN</span> Detalhamento do banheiro social</div><div class="stage-card-foot"><span class="eyebrow" style="color:var(--rust);">1h e 12min ao vivo</span><div class="mini-avatar">AN</div></div></div>
-              <div class="stage-card" onclick="openTask('Compatibilização com projeto elétrico','Projeto executivo')"><div class="stage-card-name"><span class="glyph" style="font-size:10px;">INS</span> Compatibilização elétrica</div><div class="stage-card-foot"><span class="eyebrow">4h e 0min</span><div class="mini-avatar">MP</div></div></div>
-            </div>
-            <div class="stage-col" style="width:100%;flex:1;">
-              <div class="stage-col-head"><span class="stg-name">Revisão</span><span class="stg-count">01</span></div>
-              <div class="stage-card" onclick="openTask('Planta baixa — pavimento superior','Anteprojeto')"><div class="stage-card-name"><span class="glyph" style="font-size:10px;">ARQ</span> Planta baixa — pavimento sup.</div><div class="stage-card-foot"><span class="eyebrow">6h e 30min</span><div class="mini-avatar">AN</div></div></div>
-            </div>
-            <div class="stage-col" style="width:100%;flex:1;">
-              <div class="stage-col-head"><span class="stg-name">Concluído</span><span class="stg-count">04</span></div>
-              <div class="stage-card" onclick="openTask('Estudo de viabilidade','Estudo preliminar')"><div class="stage-card-name"><span class="glyph" style="font-size:10px;">ARQ</span> Estudo de viabilidade</div><div class="stage-card-foot"><span class="eyebrow">8h e 0min</span><div class="mini-avatar">MP</div></div></div>
-              <div class="stage-card" onclick="openTask('Implantação e insolação','Estudo preliminar')"><div class="stage-card-name"><span class="glyph" style="font-size:10px;">ARQ</span> Implantação e insolação</div><div class="stage-card-foot"><span class="eyebrow">5h e 30min</span><div class="mini-avatar">AN</div></div></div>
-              <div class="stage-card" onclick="openTask('Planta baixa — térreo','Anteprojeto')"><div class="stage-card-name"><span class="glyph" style="font-size:10px;">ARQ</span> Planta baixa — térreo</div><div class="stage-card-foot"><span class="eyebrow">7h e 0min</span><div class="mini-avatar">MP</div></div></div>
-              <div class="stage-card" onclick="openTask('Elevações e cortes','Anteprojeto')"><div class="stage-card-name"><span class="glyph" style="font-size:10px;">ARQ</span> Elevações e cortes</div><div class="stage-card-foot"><span class="eyebrow">9h e 0min</span><div class="mini-avatar">AN</div></div></div>
-            </div>
-          </div>
+          <div class="stage-kanban stage-kanban--static" id="proj-kanban"></div>
         </div>
 
         <!-- REUNIOES -->
         <div class="tab-panel" data-tabpanel="reunioes">
           <div class="card">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-              <div class="panel-title" style="margin-bottom:0;">Atas de reunião</div>
-              <button class="btn btn-outline" style="padding:7px 14px;font-size:12px;">+ Nova ata</button>
+            <div class="row-between-tight">
+              <div class="panel-title panel-title--tight">Atas de reunião</div>
+              <button class="btn btn-outline btn-sm">+ Nova ata</button>
             </div>
-            <div class="simple-list-row"><div class="row-flex"><div class="doc-ic">18<br>AGO</div><div><div class="row-title">Alinhamento de acabamentos</div><div class="row-sub">Com Fam. Andrade · registrada por Mapu</div></div></div><span class="eyebrow">Ver ata →</span></div>
-            <div class="simple-list-row"><div class="row-flex"><div class="doc-ic">02<br>AGO</div><div><div class="row-title">Definição de esquadrias</div><div class="row-sub">Interna · registrada por André</div></div></div><span class="eyebrow">Ver ata →</span></div>
-            <div class="simple-list-row"><div class="row-flex"><div class="doc-ic">15<br>JUL</div><div><div class="row-title">Apresentação do anteprojeto</div><div class="row-sub">Com Fam. Andrade · registrada por Mapu</div></div></div><span class="eyebrow">Ver ata →</span></div>
+            <div id="proj-reunioes"></div>
           </div>
         </div>
 
         <!-- FORNECEDORES DO PROJETO -->
         <div class="tab-panel" data-tabpanel="fornecedores-tab">
-          <div class="card">
-            <div class="simple-list-row"><div><div class="row-title">Marcenaria Ipê</div><div class="row-sub">Marcenaria sob medida</div></div><span class="mono-cell">(85) 99123-4455</span></div>
-            <div class="simple-list-row"><div><div class="row-title">Lumen Iluminação Técnica</div><div class="row-sub">Projeto luminotécnico</div></div><span class="mono-cell">(85) 98877-2210</span></div>
-            <div class="simple-list-row"><div><div class="row-title">Construtora Alicerce</div><div class="row-sub">Execução de obra civil</div></div><span class="mono-cell">(85) 3033-4410</span></div>
-          </div>
+          <div class="card" id="proj-fornecedores"></div>
         </div>
       </section>
 
       <!-- ============ CLIENTES ============ -->
       <section class="page" data-page="clientes">
-        <div class="page-head"><div><div class="eyebrow">Cadastros</div><h1>Clientes</h1></div><button class="btn btn-primary" style="width:auto;">+ Novo cliente</button></div>
-        <div class="list" id="listaClientes">
-          <div class="list-row list-head" style="grid-template-columns:2fr 1.3fr 1.3fr 1fr;"><span>Cliente</span><span>Projeto(s)</span><span>Contato</span><span>Documentos</span></div>
-        </div>
+        <div class="page-head"><div><div class="eyebrow">Cadastros</div><h1>Clientes</h1></div><button class="btn btn-primary">+ Novo cliente</button></div>
+        <div class="list" id="listaClientes"></div>
       </section>
 
       <!-- ============ CLIENTE (detalhe) ============ -->
@@ -532,17 +211,13 @@
         </div>
         <div class="kv-table" id="cli-kv"></div>
         <div class="panel-title">Projetos vinculados</div>
-        <div class="card" id="cli-projetos" style="margin-bottom:24px;"></div>
-        <div class="panel-title">Documentos</div>
-        <div class="card" id="cli-docs"></div>
+        <div class="card mb-24" id="cli-projetos"></div>
       </section>
 
       <!-- ============ FORNECEDORES ============ -->
       <section class="page" data-page="fornecedores">
-        <div class="page-head"><div><div class="eyebrow">Cadastros</div><h1>Fornecedores</h1></div><button class="btn btn-primary" style="width:auto;">+ Novo fornecedor</button></div>
-        <div class="list" id="listaFornecedores">
-          <div class="list-row list-head" style="grid-template-columns:1.8fr 1.4fr 1.4fr 1fr;"><span>Fornecedor</span><span>Categoria</span><span>Projetos vinculados</span><span>Contato</span></div>
-        </div>
+        <div class="page-head"><div><div class="eyebrow">Cadastros</div><h1>Fornecedores</h1></div><button class="btn btn-primary">+ Novo fornecedor</button></div>
+        <div class="list" id="listaFornecedores"></div>
       </section>
 
       <!-- ============ FORNECEDOR (detalhe) ============ -->
@@ -557,7 +232,7 @@
         </div>
         <div class="kv-table" id="for-kv"></div>
         <div class="panel-title">Projetos vinculados</div>
-        <div class="card" id="for-projetos" style="margin-bottom:24px;"></div>
+        <div class="card mb-24" id="for-projetos"></div>
         <div class="panel-title">Contatos</div>
         <div class="card" id="for-contatos"></div>
       </section>
@@ -568,35 +243,20 @@
           <div><div class="eyebrow">Análise interna</div><h1>Relatório de horas</h1></div>
           <div class="filter-row" style="margin:0;"><button class="chip">Esta semana</button><button class="chip is-active">Este mês</button></div>
         </div>
-        <div class="note-box">Uso exclusivamente interno — este relatório não é utilizado para precificação de projetos.</div>
-        <div class="legend">
-          <div class="legend-item"><span class="legend-sw" style="background:#C9DCE6;"></span>Estudo preliminar</div>
-          <div class="legend-item"><span class="legend-sw" style="background:#8FB6CB;"></span>Anteprojeto</div>
-          <div class="legend-item"><span class="legend-sw" style="background:#2B5D7C;"></span>Projeto executivo</div>
-          <div class="legend-item"><span class="legend-sw" style="background:#1F2421;"></span>Acompanhamento de obra</div>
-        </div>
-        <div class="card">
-          <div class="chart-row"><div class="chart-label"><b>Residência Vale Verde</b><span>Residencial</span></div><div class="stackbar"><div class="seg" style="width:20%;background:#C9DCE6;"></div><div class="seg" style="width:25%;background:#8FB6CB;"></div><div class="seg" style="width:35%;background:#2B5D7C;"></div></div><div class="chart-total">64h e 0min</div></div>
-          <div class="chart-row"><div class="chart-label"><b>Loja Cedro</b><span>Comercial</span></div><div class="stackbar"><div class="seg" style="width:30%;background:#C9DCE6;"></div><div class="seg" style="width:45%;background:#8FB6CB;"></div><div class="seg" style="width:25%;background:#2B5D7C;"></div></div><div class="chart-total">31h e 30min</div></div>
-          <div class="chart-row"><div class="chart-label"><b>Ed. Jequitibá</b><span>Interiores</span></div><div class="stackbar"><div class="seg" style="width:40%;background:#C9DCE6;"></div><div class="seg" style="width:60%;background:#8FB6CB;"></div></div><div class="chart-total">18h e 0min</div></div>
-          <div class="chart-row"><div class="chart-label"><b>Estande Feira Design SP</b><span>Efêmera</span></div><div class="stackbar"><div class="seg" style="width:15%;background:#C9DCE6;"></div><div class="seg" style="width:20%;background:#8FB6CB;"></div><div class="seg" style="width:35%;background:#2B5D7C;"></div><div class="seg" style="width:30%;background:#1F2421;"></div></div><div class="chart-total">40h e 0min</div></div>
-          <div class="chart-row"><div class="chart-label"><b>Apartamento Bosque</b><span>Residencial</span></div><div class="stackbar"><div class="seg" style="width:100%;background:#C9DCE6;"></div></div><div class="chart-total">9h e 30min</div></div>
-        </div>
+        <div class="legend" id="horas-legend"></div>
+        <div class="card" id="horas-rows"></div>
       </section>
 
       <!-- ============ PERFIL ============ -->
       <section class="page" data-page="perfil">
         <div class="page-head"><div><div class="eyebrow">Conta</div><h1>Perfil</h1></div></div>
-        <div class="card profile-card"><div class="profile-av">AN</div><div><h3 style="font-size:16px;">André</h3><p class="eyebrow" style="margin-top:2px;">Arquiteto · acesso web</p></div></div>
-        <div class="card" style="margin-bottom:16px;">
-          <div class="panel-title">Lembretes e notificações</div>
-          <div class="toggle-row"><div class="toggle-txt"><b>Prazos de entrega</b><span>Avisar quando um prazo estiver próximo</span></div><button class="switch on" onclick="this.classList.toggle('on')"></button></div>
-          <div class="toggle-row"><div class="toggle-txt"><b>Reuniões</b><span>Lembrete 30 minutos antes</span></div><button class="switch on" onclick="this.classList.toggle('on')"></button></div>
-          <div class="toggle-row"><div class="toggle-txt"><b>Resumo diário</b><span>Notificações a cada atualização de tarefa</span></div><button class="switch" onclick="this.classList.toggle('on')"></button></div>
+        <div class="card profile-card">
+          <div class="profile-av" id="perfil-av">AN</div>
+          <div><h3 class="profile-name" id="perfil-nome">—</h3><p class="eyebrow profile-role" id="perfil-cargo">—</p></div>
         </div>
-        <div class="card" style="margin-bottom:24px;">
-          <div class="panel-title">Ambiente</div>
-          <div class="toggle-row"><div class="toggle-txt"><b>Acesso</b><span>Sistema web — sem instalação local</span></div><span class="badge concluido">Ativo</span></div>
+        <div class="card mb-16">
+          <div class="panel-title">Lembretes e notificações</div>
+          <div id="perfil-toggles"></div>
         </div>
         <button class="btn btn-outline" onclick="doLogout()">Sair</button>
       </section>
@@ -609,7 +269,8 @@
 <div class="overlay" id="overlay" onclick="closeTask()"></div>
 <aside class="task-panel" id="taskPanel">
   <div class="tp-head">
-    <div><div class="tp-tag" id="tp-phase">Projeto executivo</div><h2 class="tp-title" id="tp-title">Detalhamento do banheiro social</h2></div>
+    <div><div class="tp-tag" id="tp-phase">—</div><h2 class="tp-title" id="tp-title">—</h2></div>
+     <button class="link-btn" id="tp-edit-btn" onclick="toggleTaskEdit()">✎ Editar</button>
     <button class="tp-close" onclick="closeTask()">×</button>
   </div>
   <div class="tp-body">
@@ -619,15 +280,27 @@
       <button class="btn-timer" id="timer-btn" onclick="toggleTimer()">Iniciar cronômetro</button>
     </div>
     <div class="tp-row2">
-      <div class="tp-field"><span class="eyebrow">Responsável</span><p>André</p></div>
-      <div class="tp-field"><span class="eyebrow">Status</span><p>Em andamento</p></div>
+      <div class="tp-field"><span class="eyebrow">Responsável</span>
+        <p id="tp-resp">—</p>
+        <input class="tp-textarea" id="tp-resp-input" style="display:none;">
+      </div>
+      <div class="tp-field"><span class="eyebrow">Status</span>
+        <select class="status-select naoiniciado" id="tp-status" onchange="onStatusChange(this)">
+          <option value="naoiniciado">Não iniciado</option>
+          <option value="andamento">Em andamento</option>
+          <option value="revisao">Em revisão</option>
+          <option value="concluido">Concluído</option>
+        </select>
+      </div>
     </div>
-    <div class="tp-field"><span class="eyebrow">Descrição</span><p>Detalhamento de revestimentos, louças e metais do banheiro social, compatibilizado com o projeto hidráulico.</p></div>
-    <div class="tp-field"><span class="eyebrow">Horas registradas nesta fase</span><p style="font-family:var(--mono);">1h e 12min</p></div>
+    <div class="tp-field"><span class="eyebrow">Descrição</span>
+      <p id="tp-desc">—</p>
+      <textarea class="tp-textarea" id="tp-desc-input" style="display:none;" rows="4"></textarea>
+    </div>
+    <div class="tp-field"><span class="eyebrow">Horas registradas nesta fase</span><p class="mono-text" id="tp-horas">—</p></div>
     <div class="tp-field">
       <span class="eyebrow">Comentários</span>
-      <div class="tp-comment"><b>Mapu</b> confirmar cor do rejunte com a cliente antes de fechar o detalhe. <span>ontem</span></div>
-      <div class="tp-comment"><b>André</b> revestimento aprovado, seguindo para as louças. <span>hoje, 09:12</span></div>
+      <div id="tp-comments"></div>
     </div>
   </div>
 </aside>
