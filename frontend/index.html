@@ -1,12 +1,310 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Projeto de Engenharia de Software</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZPT — Sistema interno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Projeto de Engenharia de Software</h1>
-  <script src="script.js"></script>
+
+<!-- ============ LOGIN ============ -->
+<div id="screen-login">
+  <div class="login-box">
+    <div class="brand"><span class="brand-mark">✳</span><span class="brand-word">AZPT</span></div>
+    <p class="login-sub">Sistema interno de gestão</p>
+    <div class="field"><label for="li-email">E-mail</label><input id="li-email" type="email" value="enzo@gmail.com.br"></div>
+    <div class="field"><label for="li-pass">Senha</label><input id="li-pass" type="password" value="••••••••"></div>
+    <button class="btn btn-primary btn-block" onclick="doLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app-shell">
+  <aside class="sidebar">
+    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Esconder/mostrar barra lateral">‹</button>
+    <div class="sidebar-brand"><span class="brand-mark">✳</span><span class="brand-word">AZPT</span></div>
+    <nav class="nav-group">
+      <button class="nav-item" data-page="dashboard" onclick="nav('dashboard')"><span class="ic">◧</span><span class="txt">Painel</span></button>
+      <button class="nav-item" data-page="projetos" onclick="nav('projetos')"><span class="ic">▤</span><span class="txt">Projetos</span></button>
+      <div class="nav-label">Cadastros</div>
+      <button class="nav-item" data-page="clientes" onclick="nav('clientes')"><span class="ic">◉</span><span class="txt">Clientes</span></button>
+      <button class="nav-item" data-page="fornecedores" onclick="nav('fornecedores')"><span class="ic">⌂</span><span class="txt">Fornecedores</span></button>
+      <div class="nav-label">Análise</div>
+      <button class="nav-item" data-page="horas" onclick="nav('horas')"><span class="ic">◷</span><span class="txt">Horas</span></button>
+    </nav>
+    <div class="nav-group nav-group-bottom">
+      <button class="nav-item" data-page="perfil" onclick="nav('perfil')"><span class="ic">◌</span><span class="txt">Perfil</span></button>
+    </div>
+    <div class="sidebar-foot">v0.3 · protótipo</div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="crumb" id="crumb"><b>Painel</b></div>
+      <div class="topbar-right">
+        <button class="icon-btn" title="Tarefa recente" onclick="openLastTask()">◷<span class="dot-badge" id="timerDot" style="display:none;"></span></button>
+        <button class="icon-btn" title="Notificações">🔔<span class="dot-badge"></span></button>
+        <div class="avatar" id="topbar-avatar">EN</div>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- ============ DASHBOARD ============ -->
+      <section class="page" data-page="dashboard">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow" id="dash-date">—</div>
+            <h1 id="dash-greeting">Bom dia</h1>
+          </div>
+          <div class="mini-stat" id="dash-hours">—</div>
+        </div>
+
+        <div class="stat-grid" id="dash-stats"></div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="panel-title">Lembretes</div>
+            <button class="btn btn-outline btn-sm" onclick="addReminder()">+ Lembrete</button>
+            <div id="dash-reminders"></div>
+          </div>
+          <div class="card">
+            <div class="panel-title">Atividade recente</div>
+            <div class="timeline" id="dash-activity"></div>
+          </div>
+        </div>
+
+        <div class="section-title"><h2>Projetos em destaque</h2><a href="#" class="eyebrow" onclick="nav('projetos');return false;">Ver todos →</a></div>
+        <div class="proj-row-grid" id="dash-featured"></div>
+      </section>
+
+      <!-- ============ PROJETOS (HUB) ============ -->
+      <section class="page" data-page="projetos">
+        <div class="page-head"><div><div class="eyebrow">Gestão de projetos</div><h1>Projetos</h1></div><button class="btn btn-primary">+ Novo projeto</button></div>
+
+        <div class="hub-tabs">
+          <button class="hub-tab is-active" data-hub="hub-projetos" onclick="hubTab('hub-projetos')">Projetos</button>
+          <button class="hub-tab" data-hub="hub-cronograma" onclick="hubTab('hub-cronograma')">Cronograma</button>
+          <button class="hub-tab" data-hub="hub-etapa" onclick="hubTab('hub-etapa')">Por etapa</button>
+          <button class="hub-tab" data-hub="hub-concluidos" onclick="hubTab('hub-concluidos')">Concluídos</button>
+        </div>
+
+        <!-- HUB: PROJETOS (thumbnails) -->
+        <div class="hub-panel is-active" data-hubpanel="hub-projetos">
+          <div class="hub-toolbar"><input class="search-input" placeholder="Buscar projeto ou cliente…"></div>
+          <div class="thumb-grid" id="hub-thumb-grid"></div>
+        </div>
+
+        <!-- HUB: CRONOGRAMA GERAL -->
+        <div class="hub-panel" data-hubpanel="hub-cronograma">
+          <div class="cal-head">
+            <div><h2 class="cal-title" id="cal-month">—</h2></div>
+            <div class="cal-nav"><button>‹</button><button>›</button></div>
+          </div>
+          <div class="cal-grid" id="cal-grid">
+            <div class="cal-dow">Dom</div><div class="cal-dow">Seg</div><div class="cal-dow">Ter</div><div class="cal-dow">Qua</div><div class="cal-dow">Qui</div><div class="cal-dow">Sex</div><div class="cal-dow">Sáb</div>
+          </div>
+        </div>
+
+        <!-- HUB: POR ETAPA -->
+        <div class="hub-panel" data-hubpanel="hub-etapa">
+          <div class="stage-kanban" id="stageKanban"></div>
+        </div>
+
+        <!-- HUB: CONCLUÍDOS -->
+        <div class="hub-panel" data-hubpanel="hub-concluidos">
+          <div class="list" id="lista-concluidos">
+            <div class="list-row list-head"><span></span><span>Projeto</span><span>Cliente</span><span>Categoria</span><span>Concluído em</span><span>Horas totais</span><span></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PROJETO DETALHE ============ -->
+      <section class="page" data-page="projeto">
+        <div class="proj-hero">
+          <div class="proj-hero-photo" id="proj-hero-photo"></div>
+          <div class="proj-hero-info">
+            <div class="proj-title-row">
+              <span class="glyph" id="proj-glyph">✳</span><h1 id="proj-title">—</h1>
+              <select class="status-select andamento" id="proj-status" onchange="onStatusChange(this)" title="Status do projeto">
+                <option value="semtag">Sem tag</option>
+                <option value="naoiniciado">Atrasado</option>
+                <option value="andamento" selected>Tudo ok</option>
+                <option value="revisao">Em revisão</option>
+                <option value="concluido">Concluído</option>
+              </select>
+            </div>
+            <div class="proj-hero-sub" id="proj-sub">—</div>
+            <div class="hero-meta-row" id="proj-meta"></div>
+            <button class="link-btn" onclick="openLastTask()">◷ Ver tarefas do projeto →</button>
+          </div>
+        </div>
+
+        <div class="kv-table" id="proj-kv"></div>
+
+        <div class="tabs">
+          <button class="tab-btn is-active" data-tab="tarefas" onclick="tab('tarefas')">Tarefas</button>
+          <button class="tab-btn" data-tab="cronograma" onclick="tab('cronograma')">Cronograma</button>
+          <button class="tab-btn" data-tab="kanban" onclick="tab('kanban')">Kanban</button>
+          <button class="tab-btn" data-tab="reunioes" onclick="tab('reunioes')">Reuniões</button>
+          <button class="tab-btn" data-tab="fornecedores-tab" onclick="tab('fornecedores-tab')">Fornecedores</button>
+        </div>
+
+        <!-- TAREFAS -->
+        <div class="tab-panel is-active" data-tabpanel="tarefas">
+          <div class="status-tabs">
+            <button class="status-tab is-active" data-status="andamento" onclick="statusTab('andamento')">Em andamento</button>
+            <button class="status-tab" data-status="revisao" onclick="statusTab('revisao')">Em revisão</button>
+            <button class="status-tab" data-status="concluidas" onclick="statusTab('concluidas')">Concluídas</button>
+          </div>
+          <div class="status-panel is-active" data-statuspanel="andamento" id="tasks-andamento"></div>
+          <div class="status-panel" data-statuspanel="revisao" id="tasks-revisao"></div>
+          <div class="status-panel" data-statuspanel="concluidas" id="tasks-concluidas"></div>
+        </div>
+
+        <!-- CRONOGRAMA -->
+        <div class="tab-panel" data-tabpanel="cronograma">
+          <div class="gantt-wrap" id="gantt-root"></div>
+        </div>
+
+        <!-- KANBAN -->
+        <div class="tab-panel" data-tabpanel="kanban">
+          <div class="stage-kanban stage-kanban--static" id="proj-kanban"></div>
+        </div>
+
+        <!-- REUNIOES -->
+        <div class="tab-panel" data-tabpanel="reunioes">
+          <div class="card">
+            <div class="row-between-tight">
+              <div class="panel-title panel-title--tight">Atas de reunião</div>
+              <button class="btn btn-outline btn-sm">+ Nova ata</button>
+            </div>
+            <div id="proj-reunioes"></div>
+          </div>
+        </div>
+
+        <!-- FORNECEDORES DO PROJETO -->
+        <div class="tab-panel" data-tabpanel="fornecedores-tab">
+          <div class="card" id="proj-fornecedores"></div>
+        </div>
+      </section>
+
+      <!-- ============ CLIENTES ============ -->
+      <section class="page" data-page="clientes">
+        <div class="page-head"><div><div class="eyebrow">Cadastros</div><h1>Clientes</h1></div><button class="btn btn-primary">+ Novo cliente</button></div>
+        <div class="list" id="listaClientes"></div>
+      </section>
+
+      <!-- ============ CLIENTE (detalhe) ============ -->
+      <section class="page" data-page="cliente">
+        <a class="back-link" onclick="nav('clientes')">← Voltar para clientes</a>
+        <div class="detail-hero">
+          <div class="detail-av" id="cli-av">FA</div>
+          <div>
+            <h1 id="cli-nome">—</h1>
+            <div class="eyebrow" id="cli-sub">—</div>
+          </div>
+        </div>
+        <div class="kv-table" id="cli-kv"></div>
+        <div class="panel-title">Projetos vinculados</div>
+        <div class="card mb-24" id="cli-projetos"></div>
+      </section>
+
+      <!-- ============ FORNECEDORES ============ -->
+      <section class="page" data-page="fornecedores">
+        <div class="page-head"><div><div class="eyebrow">Cadastros</div><h1>Fornecedores</h1></div><button class="btn btn-primary">+ Novo fornecedor</button></div>
+        <div class="list" id="listaFornecedores"></div>
+      </section>
+
+      <!-- ============ FORNECEDOR (detalhe) ============ -->
+      <section class="page" data-page="fornecedor">
+        <a class="back-link" onclick="nav('fornecedores')">← Voltar para fornecedores</a>
+        <div class="detail-hero">
+          <div class="detail-av forn" id="for-av">MI</div>
+          <div>
+            <h1 id="for-nome">—</h1>
+            <div class="eyebrow" id="for-sub">—</div>
+          </div>
+        </div>
+        <div class="kv-table" id="for-kv"></div>
+        <div class="panel-title">Projetos vinculados</div>
+        <div class="card mb-24" id="for-projetos"></div>
+        <div class="panel-title">Contatos</div>
+        <div class="card" id="for-contatos"></div>
+      </section>
+
+      <!-- ============ RELATORIO DE HORAS ============ -->
+      <section class="page" data-page="horas">
+        <div class="page-head">
+          <div><div class="eyebrow">Análise interna</div><h1>Relatório de horas</h1></div>
+          <div class="filter-row" style="margin:0;"><button class="chip">Esta semana</button><button class="chip is-active">Este mês</button></div>
+        </div>
+        <div class="legend" id="horas-legend"></div>
+        <div class="card" id="horas-rows"></div>
+      </section>
+
+      <!-- ============ PERFIL ============ -->
+      <section class="page" data-page="perfil">
+        <div class="page-head"><div><div class="eyebrow">Conta</div><h1>Perfil</h1></div></div>
+        <div class="card profile-card">
+          <div class="profile-av" id="perfil-av">AN</div>
+          <div><h3 class="profile-name" id="perfil-nome">—</h3><p class="eyebrow profile-role" id="perfil-cargo">—</p></div>
+        </div>
+        <div class="card mb-16">
+          <div class="panel-title">Lembretes e notificações</div>
+          <div id="perfil-toggles"></div>
+        </div>
+        <button class="btn btn-outline" onclick="doLogout()">Sair</button>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============ TASK SLIDE-OVER ============ -->
+<div class="overlay" id="overlay" onclick="closeTask()"></div>
+<aside class="task-panel" id="taskPanel">
+  <div class="tp-head">
+    <div><div class="tp-tag" id="tp-phase">—</div><h2 class="tp-title" id="tp-title">—</h2></div>
+     <button class="link-btn" id="tp-edit-btn" onclick="toggleTaskEdit()">✎ Editar</button>
+    <button class="tp-close" onclick="closeTask()">×</button>
+  </div>
+  <div class="tp-body">
+    <div class="timer-box">
+      <div class="timer-display" id="timer-display">00:00:00</div>
+      <div class="timer-sub">cronômetro da fase</div>
+      <button class="btn-timer" id="timer-btn" onclick="toggleTimer()">Iniciar cronômetro</button>
+    </div>
+    <div class="tp-row2">
+      <div class="tp-field"><span class="eyebrow">Responsável</span>
+        <p id="tp-resp">—</p>
+        <input class="tp-textarea" id="tp-resp-input" style="display:none;">
+      </div>
+      <div class="tp-field"><span class="eyebrow">Status</span>
+        <select class="status-select naoiniciado" id="tp-status" onchange="onStatusChange(this)">
+          <option value="naoiniciado">Não iniciado</option>
+          <option value="andamento">Em andamento</option>
+          <option value="revisao">Em revisão</option>
+          <option value="concluido">Concluído</option>
+        </select>
+      </div>
+    </div>
+    <div class="tp-field"><span class="eyebrow">Descrição</span>
+      <p id="tp-desc">—</p>
+      <textarea class="tp-textarea" id="tp-desc-input" style="display:none;" rows="4"></textarea>
+    </div>
+    <div class="tp-field"><span class="eyebrow">Horas registradas nesta fase</span><p class="mono-text" id="tp-horas">—</p></div>
+    <div class="tp-field">
+      <span class="eyebrow">Comentários</span>
+      <div id="tp-comments"></div>
+    </div>
+  </div>
+</aside>
+
+<script src="script.js"></script>
 </body>
 </html>
