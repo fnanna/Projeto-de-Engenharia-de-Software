@@ -208,7 +208,7 @@ const DATA = {
   },
 
   perfil: {
-    nome:'André', cargo:'Arquiteto · acesso web', iniciais:'AN',
+    nome:'Enzo', cargo:'Estagiário · acesso web', iniciais:'EN',
     toggles: [
       { label:'Prazos de entrega', sub:'Avisar quando um prazo estiver próximo', on:true },
       { label:'Reuniões', sub:'Lembrete 30 minutos antes', on:true },
