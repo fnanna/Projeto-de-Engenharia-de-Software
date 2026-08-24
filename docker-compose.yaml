@@ -46,7 +46,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      FLASK_APP: app.py
+      FLASK_APP: wsgi.py
       FLASK_ENV: production
       DB_HOST: db
       DB_PORT: 3306
