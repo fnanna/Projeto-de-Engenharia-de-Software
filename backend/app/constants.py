@@ -5,3 +5,5 @@ STATUS_PROJETO = {"orcamento", "em_andamento", "em_aprovacao", "concluido", "can
 STATUS_FASE = {"nao_iniciada", "em_andamento", "concluida"}
 STATUS_TAREFA = {"a_fazer", "em_andamento", "em_revisao", "concluida"}
 PRIORIDADE_TAREFA = {"baixa", "media", "alta"}
+# Adicione esta linha ao app/constants.py (se TIPO_PESSOA_CLIENTE já existir lá, ignore este arquivo)
+TIPO_PESSOA_CLIENTE = {"fisica", "juridica"}
