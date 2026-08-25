@@ -6,6 +6,10 @@ from app.database import engine
 from app.blueprints.projetos import projetos_bp
 from app.blueprints.fases import fases_bp
 from app.blueprints.tarefas import tarefas_bp
+from app.blueprints.horas import horas_bp
+from app.blueprints.reunioes import reunioes_bp
+from app.blueprints.clientes import clientes_bp, documentos_bp
+from app.blueprints.fornecedores import fornecedores_bp
 
 app = Flask(__name__)
 CORS(app)  # libera acesso do frontend (React) rodando em outra origem/porta
@@ -13,7 +17,11 @@ CORS(app)  # libera acesso do frontend (React) rodando em outra origem/porta
 app.register_blueprint(projetos_bp)
 app.register_blueprint(fases_bp)
 app.register_blueprint(tarefas_bp)
-
+app.register_blueprint(horas_bp)
+app.register_blueprint(reunioes_bp)
+app.register_blueprint(clientes_bp)
+app.register_blueprint(documentos_bp)
+app.register_blueprint(fornecedores_bp)
 
 @app.get("/")
 def raiz():
